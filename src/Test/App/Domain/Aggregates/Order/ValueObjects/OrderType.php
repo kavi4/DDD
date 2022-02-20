@@ -5,7 +5,7 @@ namespace ddd\Test\App\Domain\Aggregates\Order\ValueObjects;
 
 use ddd\Core\Abstractive\Exception\InvalidArgumentException;
 use ddd\Core\ValueObject;
-use ddd\Test\App\Domain\Dictionary\OrderTypeDictionary;
+use ddd\Test\App\Domain\Assertion;
 
 class OrderType extends ValueObject
 {
@@ -13,7 +13,7 @@ class OrderType extends ValueObject
 
     public function __construct(string $value)
     {
-        if (!in_array($value, OrderTypeDictionary::getCodes())) {
+        if (!Assertion::orderType($value)) {
             throw new InvalidArgumentException('Invalid order type');
         }
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ddd\Test\App\Domain\ValueObjects;
 
 use ddd\Core\Abstractive\Exception\InvalidArgumentException;
+use ddd\Core\Assertion;
 use ddd\Core\ValueObject;
 
 final class Name extends ValueObject
@@ -12,12 +13,8 @@ final class Name extends ValueObject
 
     public function __construct(string $value)
     {
-        if (strlen($value) > 255) {
-            throw new InvalidArgumentException('userName must be less 255 chars');
-        }
-
-        if (strlen($value) < 3) {
-            throw new InvalidArgumentException('userName must be more 3 chars');
+        if (!Assertion::string($value, 3)) {
+            throw new InvalidArgumentException('UserName invalid');
         }
 
         $this->value = $value;

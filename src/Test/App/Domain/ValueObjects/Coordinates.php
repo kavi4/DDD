@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ddd\Test\App\Domain\ValueObjects;
 
 use ddd\Core\Abstractive\Exception\InvalidArgumentException;
+use ddd\Core\Assertion;
 use ddd\Core\ValueObject;
 
 class Coordinates extends ValueObject
@@ -13,11 +14,11 @@ class Coordinates extends ValueObject
 
     public function __construct(float $lat, float $long)
     {
-        if ($lat > 90 || $lat < -90) {
+        if (!Assertion::latitude($lat)) {
             throw new InvalidArgumentException('Invalid latitude');
         }
 
-        if ($long > 180 || $long < -180) {
+        if (!Assertion::longitude($long)) {
             throw new InvalidArgumentException('Invalid longitude');
         }
 
