@@ -19,6 +19,7 @@ class Order extends Aggregate implements ITradable
     protected Uuid $customerId;
     protected OrderType $type;
     protected Delivery $delivery;
+    protected Money $discount;
 
     /**
      * @var Position[]
@@ -33,6 +34,7 @@ class Order extends Aggregate implements ITradable
         Uuid $customerId,
         OrderType $type,
         Delivery $delivery,
+        Money $discount,
         array $positions,
         DateTime $created_at,
         DateTime $updated_at
@@ -50,6 +52,7 @@ class Order extends Aggregate implements ITradable
         $this->customerId = $customerId;
         $this->type = $type;
         $this->delivery = $delivery;
+        $this->discount = $discount;
         $this->positions = $positions;
         $this->created_at = $created_at;
         $this->updated_at = $updated_at;
@@ -57,22 +60,46 @@ class Order extends Aggregate implements ITradable
 
     public function getTotalCost(): Money
     {
-        $itemsCost = new Money($this->positions[0]->getTotalCost()->getCurrency(), 0);
+        $itemsCost = 0;
 
         foreach ($this->positions as $position) {
-            $itemsCost = $itemsCost->addition($position->getTotalCost());
+            $itemsCost += $position->getTotalCost()->getValue();
         }
-        return $itemsCost;
+
+        $itemsCost += $this->delivery->deliveryCost->getValue();
+
+        return new Money($itemsCost);
     }
 
     public function getDiscount(): Money
     {
-        $itemsDiscount = new Money($this->positions[0]->getTotalCost()->getCurrency(), 0);
+        $itemsDiscount = 0;
 
         foreach ($this->positions as $position) {
-            $itemsDiscount = $itemsDiscount->addition($position->getDiscount());
+            $itemsDiscount += $position->getDiscount()->getValue();
         }
 
-        return $itemsDiscount;
+        return new Money($itemsDiscount);
+    }
+
+    public function applyDiscount(Money $discount): void
+    {
+        $total = $this->getTotalCost();
+
+        $applyDiscount = $discount;
+
+        if ($discount->more($total)) {
+            $applyDiscount = $total;
+        }
+
+        $stockDiscount = new Money($total->getValue());
+
+        foreach ($this->positions as $position) {
+            $positionDiscount = $position->getTotalCost()->division($total)->multiplication($applyDiscount);
+            $position->applyDiscount($positionDiscount);
+            $stockDiscount = $stockDiscount->division($positionDiscount);
+        }
+
+        $this->discount = $stockDiscount;
     }
 }

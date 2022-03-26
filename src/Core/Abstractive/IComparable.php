@@ -5,16 +5,16 @@ namespace ddd\Core\Abstractive;
 
 interface IComparable
 {
-    public function equal($value): bool;
+    public function equal(mixed $value): bool;
 
-    public function notEqual($value): bool;
+    public function notEqual(mixed $value): bool;
 
-    public function more($value): bool;
+    public function more(mixed $value): bool;
 
-    public function moreOrEqual($value): bool;
+    public function moreOrEqual(mixed $value): bool;
 
-    public function less($value): bool;
+    public function less(mixed $value): bool;
 
-    public function lessOrEqual($value): bool;
+    public function lessOrEqual(mixed $value): bool;
 
 }

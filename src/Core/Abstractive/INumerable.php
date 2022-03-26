@@ -5,15 +5,15 @@ namespace ddd\Core\Abstractive;
 
 interface INumerable
 {
-    public function addition($value);
+    public function addition($value): self;
 
-    public function subtraction($value);
+    public function subtraction($value): self;
 
-    public function multiplication($value);
+    public function multiplication($value): self;
 
-    public function division($value);
+    public function division($value): self;
 
-    public function modulo($value);
+    public function modulo($value): self;
 
-    public function exponentiation($value);
+    public function exponentiation($value): self;
 }

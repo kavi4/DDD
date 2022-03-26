@@ -8,13 +8,14 @@ use ddd\Core\Abstractive\IComparable;
 use ddd\Core\Abstractive\INumerable;
 use ddd\Core\ValueObject;
 use ddd\Test\App\Domain\Assertion;
+use ddd\Test\App\Domain\Dictionary\CurrencyCodeDictionary;
 
 class Money extends ValueObject implements IComparable, INumerable
 {
     protected string $currencyCode;
     protected float $value;
 
-    public function __construct(string $currencyCode, float $value)
+    public function __construct(float $value, string $currencyCode = CurrencyCodeDictionary::RUB)
     {
         $this->currencyCode = $currencyCode;
 
@@ -29,7 +30,7 @@ class Money extends ValueObject implements IComparable, INumerable
         $this->value = $value;
     }
 
-    public function getValue()
+    public function getValue(): float
     {
         return $this->value;
     }
@@ -108,81 +109,81 @@ class Money extends ValueObject implements IComparable, INumerable
         return false;
     }
 
-    public function addition($value)
+    public function addition($value): static
     {
         if (is_numeric($value)) {
-            return new self($this->currencyCode, $this->value + $value);
+            return new static($this->value + $value, $this->currencyCode);
         }
 
         if ($value instanceof self) {
-            return new self($this->currencyCode, $this->value + $value->getValue());
+            return new static($this->value + $value->getValue(), $this->currencyCode);
         }
 
-        return new self($this->currencyCode, $this->value);
+        throw new InvalidArgumentException('Unsupported value type');
     }
 
-    public function subtraction($value)
+    public function subtraction($value): static
     {
         if (is_numeric($value)) {
-            return new self($this->currencyCode, $this->value - $value);
+            return new static($this->value - $value, $this->currencyCode);
         }
 
         if ($value instanceof Money) {
-            return new self($this->currencyCode, $this->value - $value->getValue());
+            return new static($this->value - $value->getValue(), $this->currencyCode);
         }
 
-        return new self($this->currencyCode, $this->value);
+        throw new InvalidArgumentException('Unsupported value type');
     }
 
-    public function multiplication($value)
+    public function multiplication($value): static
     {
         if (is_numeric($value)) {
-            return new self($this->currencyCode, $this->value * $value);
+            return new static($this->value * $value, $this->currencyCode);
         }
 
         if ($value instanceof self) {
-            return new self($this->currencyCode, $this->value * $value->getValue());
+            return new static($this->value * $value->getValue(), $this->currencyCode);
         }
 
-        return new self($this->currencyCode, $this->value);
+        throw new InvalidArgumentException('Unsupported value type');
     }
 
-    public function division($value)
+    public function division($value): static
     {
         if (is_numeric($value)) {
-            return new self($this->currencyCode, $this->value / $value);
+            return new static($this->value / $value, $this->currencyCode);
         }
 
         if ($value instanceof self) {
-            return new self($this->currencyCode, $this->value / $value->getValue());
+            return new static($this->value / $value->getValue(), $this->currencyCode);
         }
 
-        return new self($this->currencyCode, $this->value);
+        throw new InvalidArgumentException('Unsupported value type');
     }
 
-    public function modulo($value)
+    public function modulo($value): static
     {
         if (is_numeric($value)) {
-            return new self($this->currencyCode, $this->value % $value);
+            return new static($this->value % $value, $this->currencyCode);
         }
 
         if ($value instanceof self) {
-            return new self($this->currencyCode, $this->value % $value->getValue());
+            return new static($this->value % $value->getValue(), $this->currencyCode);
         }
 
-        return new self($this->currencyCode, $this->value);
+        throw new InvalidArgumentException('Unsupported value type');
     }
 
-    public function exponentiation($value)
+    public function exponentiation($value): static
     {
         if (is_numeric($value)) {
-            return new self($this->currencyCode, $this->value ^ $value);
+            return new static($this->value ^ $value, $this->currencyCode);
         }
 
         if ($value instanceof self) {
-            return new self($this->currencyCode, $this->value ^ $value->getValue());
+            return new static($this->value ^ $value->getValue(), $this->currencyCode);
         }
 
-        return new self($this->currencyCode, $this->value);
+        throw new InvalidArgumentException('Unsupported value type');
     }
 }

@@ -10,4 +10,6 @@ interface ITradable
     public function getTotalCost(): Money;
 
     public function getDiscount(): Money;
+
+    public function applyDiscount(Money $discount): void;
 }
