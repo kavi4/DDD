@@ -13,7 +13,7 @@ class Assertion
 
     public static function phoneNumber(string $value): bool
     {
-        return !preg_match('^(\+\d{12}|\d{11}|\+\d{2}-\d{3}-\d{7})$', $value);
+        return !preg_match('/^(\+\d{12}|\d{11}|\+\d{2}-\d{3}-\d{7})$/', $value);
     }
 
     public static function quantity(float $value): bool

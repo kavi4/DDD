@@ -3,15 +3,19 @@ declare(strict_types=1);
 
 namespace ddd\Core;
 
-use Ramsey\Uuid\Uuid;
-
 use ddd\Core\Abstractive\IEntity;
+use Ramsey\Uuid\UuidInterface;
 
 class Entity implements IEntity
 {
-    protected Uuid $id;
+    protected UuidInterface $id;
 
-    public function getId():Uuid
+    public function __construct(UuidInterface $id)
+    {
+        $this->id = $id;
+    }
+
+    public function getId(): UuidInterface
     {
         return $this->id;
     }
