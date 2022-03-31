@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use ddd\Test\App\Domain\Aggregates\Customer\Customer;
+use ddd\Test\App\Domain\Aggregates\User\User;
 use ddd\Test\App\Domain\ValueObjects\Name;
 use ddd\Test\App\Domain\ValueObjects\PhoneNumber;
 use Doctrine\DBAL\DriverManager;
@@ -30,6 +31,8 @@ $config->setProxyNamespace('ddd\Proxies');
 $entityManager = EntityManager::create(DriverManager::getConnection(['url' => getenv('DB_DSN')]), $config);
 
 $customer = new Customer(Uuid::uuid4(), new Name('Vasya'), new PhoneNumber('+79991389576'));
+$user = new User(Uuid::uuid4(), new Name('Admin'));
 
 $entityManager->persist($customer);
+$entityManager->persist($user);
 $entityManager->flush();
